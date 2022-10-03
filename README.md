@@ -1,5 +1,9 @@
 # Python Kal prototype
 
+Go from this ![ugly_calendar](./images/ugly_calendar.PNG)
+
+To this! ![pretty_calendar](./images/pretty_calendar.PNG)
+
 ## Install dependencies
 
 Preferably in a new [virtual environment](https://docs.python.org/fr/3/library/venv.html):
