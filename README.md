@@ -58,7 +58,7 @@ We first define a [Condition](./src/event_rules.py) object
 HAI501I_condition = Condition().field('title').contains('HAI501I', case_sensitive=False)  # Génie logiciel
 ```
 
-This condition will match all events having `HAI501I` or event `hAI501i` in the title.
+This condition will match all events having `HAI501I` or even `hAI501i` in the title.
 
 For the events that match this criteria, we can define a Rule, which is a set of actions to transform each event:
 
