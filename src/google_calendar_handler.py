@@ -46,34 +46,44 @@ class GoogleCalendarHandler:
         color = None
         if color_id is not None:
             color = EventColor.from_color_id(color_id)
-        start_dict = response.get('start', None)
-        start = None
-        if start_dict is not None:
-            date_str = start_dict.get('dateTime', None)
 
-            start = datetime.fromisoformat(date_str)
-        end_dict = response.get('end', None)
-        end = None
-        if end_dict is not None:
-            date_str = end_dict.get('dateTime', None)
-            end = datetime.fromisoformat(date_str)
+        is_all_day=False
+        start_dict = response['start']
+        if start_dict is not None:
+            if 'dateTime' in start_dict:
+                start_dt = datetime.fromisoformat(start_dict['dateTime'])
+            elif 'date' in start_dict:
+                is_all_day = True
+                start_dt = datetime.strptime(start_dict['date'], '%Y-%m-%d')
+            else:
+                raise ValueError('Unknown date type')
+
+        end_dict = response['end']
+        if end_dict:
+            if 'dateTime' in end_dict:
+                end_dt = datetime.fromisoformat(end_dict['dateTime'])
+            elif 'date' in end_dict:
+                is_all_day = True
+                end_dt = datetime.strptime(end_dict['date'], '%Y-%m-%d')
+            else:
+                raise ValueError('Unknown date type')
+        
+
 
         extended_properties = response.get('extendedProperties', {})
-
-
 
         return Event(title=title,
                      description=description,
                      location=location,
-                     start=start,
-                     end=end,
+                     start=start_dt,
+                     end=end_dt,
                      color=color,
                      updated=updated,
                      created=created,
                      html_link=html_link,
                      id=id,
                      extended_properties = extended_properties,
-                     # is_all_day ? Event type default ? # todo : try to parse is_all_day
+                     is_all_day=is_all_day,
                      )
 
     def get_events_since_date(self, date: datetime = None, limit: int = None) -> List[Event]:

@@ -20,7 +20,7 @@ def run_service(user:Mirror):
     print(f"Running service for {user.title}...")
 
     
-    reset_credentials(user.title) # pops up the Oauth flow again instead of using the refresh token
+    # reset_credentials(user.title) # pops up the Oauth flow again instead of using the refresh token
     worker = KalWorker(source_ics_calendar_url=user.source_ics_calendar_url,
                               google_calendar_id=user.google_calendar_id,
                               rules=user.rules

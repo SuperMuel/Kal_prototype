@@ -1,7 +1,7 @@
 """Class for changing an event's color base on it's content"""
 from dataclasses import replace
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional,Sequence
 
 from src.event import Event
 from src.event_colors import EventColor
@@ -118,6 +118,32 @@ class Condition:
             return condition_1.evaluate(event) or condition_2.evaluate(event)
         self.evaluate_function = evaluate
         return self
+    
+    def logical_any(self, conditions:Sequence['Condition']):
+        def evaluate(event:Event)->bool:
+            return any([condition.evaluate(event) for condition in conditions])
+        
+        self.evaluate_function = evaluate
+        return self
+
+
+    def logical_and(self, condition_1: 'Condition', condition_2: 'Condition'):
+        def evaluate(event: Event) -> bool:
+            return condition_1.evaluate(event) and condition_2.evaluate(event)
+        self.evaluate_function = evaluate
+        return self
+
+    def logical_all(self, conditions:Sequence['Condition']):
+        def evaluate(event:Event)->bool:
+            return all([condition.evaluate(event) for condition in conditions])
+        
+        self.evaluate_function = evaluate
+        return self
+    def logical_not(self, condition_1: 'Condition'):
+        def evaluate(event: Event) -> bool:
+            return not condition_1.evaluate(event)
+        self.evaluate_function = evaluate
+        return self
 
     def evaluate(self, event: Event) -> bool:
         if not isinstance(event, Event):
@@ -130,8 +156,6 @@ class Condition:
         if Event.type_of_field(self.field_name) is not str:
             raise TypeError(
                 f"{Condition.contains} can only be called on a string field. {self.field=} {type(self.field)=}.")
-
-    # todo : add negation, and
 
 
 class Rule:
