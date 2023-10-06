@@ -39,6 +39,7 @@ class Condition:
     def always(self):
         """Sets the condition to evaluate to True all the time"""
         self.evaluate_function = lambda event: True
+        return self
 
     def contains(self, substring: str, *, case_sensitive=True):
         """Sets the condition to evaluate to True if :
